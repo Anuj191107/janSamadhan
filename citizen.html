@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Jan Samadhan - Citizen</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+
+<body>
+
+    <header>
+
+        <h1>Jan Samadhan</h1>
+
+        <nav>
+
+            <a href="citizen.html">
+                Home
+            </a>
+
+            <a href="report.html">
+                Report Issue
+            </a>
+
+            <button id="logoutButton">
+                Logout
+            </button>
+
+        </nav>
+
+    </header>
+
+
+    <main>
+
+        <h2>Civic Issues</h2>
+
+
+        <!-- Category filters -->
+
+        <div id="filters">
+
+            <button data-category="all">
+                All
+            </button>
+
+            <button data-category="Road">
+                Road
+            </button>
+
+            <button data-category="Water">
+                Water
+            </button>
+
+            <button data-category="Garbage">
+                Garbage
+            </button>
+
+            <button data-category="Drainage">
+                Drainage
+            </button>
+
+            <button data-category="Street Light">
+                Street Light
+            </button>
+
+        </div>
+
+
+        <!-- Loading message -->
+
+        <p id="loadingMessage">
+            Loading complaints...
+        </p>
+
+
+        <!-- Error message -->
+
+        <p id="errorMessage"></p>
+
+
+        <!-- Complaints will appear here -->
+
+        <div id="complaintsContainer"></div>
+
+
+    </main>
+
+
+    <script
+        type="module"
+        src="js/complaints.js">
+    </script>
+
+</body>
+
+</html>

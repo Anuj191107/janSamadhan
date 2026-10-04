@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Report Issue - Jan Samadhan</title>
+</head>
+
+<body>
+
+    <h1>Report Civic Issue</h1>
+
+    <form id="complaintForm">
+
+        <label>Issue Title</label>
+        <br>
+
+        <input type="text" id="title" required>
+
+        <br><br>
+
+
+        <label>Category</label>
+        <br>
+
+        <select id="category" required>
+
+            <option value="">
+                Select Category
+            </option>
+
+            <option value="Road">
+                Road
+            </option>
+
+            <option value="Garbage">
+                Garbage
+            </option>
+
+            <option value="Water">
+                Water
+            </option>
+
+            <option value="Drainage">
+                Drainage
+            </option>
+
+            <option value="Street Light">
+                Street Light
+            </option>
+
+            <option value="Electricity">
+                Electricity
+            </option>
+
+            <option value="Other">
+                Other
+            </option>
+
+        </select>
+
+        <br><br>
+
+
+        <label>Description</label>
+        <br>
+
+        <textarea id="description" rows="5" required></textarea>
+
+        <br><br>
+
+
+        <label>Complaint Image</label>
+        <br>
+
+        <input type="file" id="image" accept="image/*" required>
+
+        <br><br>
+
+
+        <button type="button" id="locationButton">
+            📍 Use My Location
+        </button>
+
+        <p id="locationStatus">
+            Location not selected
+        </p>
+
+
+        <button type="submit" id="submitButton">
+            Submit Complaint
+        </button>
+
+    </form>
+
+
+    <p id="message"></p>
+
+
+    <script type="module" src="js/report.js">
+    </script>
+
+</body>
+
+</html>

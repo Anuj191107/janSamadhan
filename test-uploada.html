@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Drive Upload Test</title>
+</head>
+
+<body>
+
+    <h1>Google Drive Upload Test</h1>
+
+    <input type="file" id="fileInput" accept="image/*">
+
+    <button id="uploadButton">
+        Upload Image
+    </button>
+
+    <p id="status"></p>
+
+
+    <script>
+
+        const APPS_SCRIPT_URL =
+            "https://script.google.com/macros/s/AKfycbzt0HcpGxDUc6Mpitckt3B3zXRiJL-I2WZDBIM6aLqfZ4VR1cb3o_nbkimQGGoWKzJO/exec";
+
+
+        document
+            .getElementById("uploadButton")
+            .addEventListener("click", uploadImage);
+
+
+        async function uploadImage() {
+
+            const fileInput =
+                document.getElementById("fileInput");
+
+            const status =
+                document.getElementById("status");
+
+            const file = fileInput.files[0];
+
+
+            if (!file) {
+
+                status.textContent =
+                    "Please select an image.";
+
+                return;
+            }
+
+
+            status.textContent =
+                "Preparing upload...";
+
+
+            const reader = new FileReader();
+
+
+            reader.onload = async function () {
+
+                const base64String =
+                    reader.result.split(",")[1];
+
+
+                const data = {
+
+                    fileName: file.name,
+
+                    mimeType: file.type,
+
+                    fileData: base64String,
+
+                    type: "complaint"
+
+                };
+
+
+                try {
+
+                    const response =
+                        await fetch(APPS_SCRIPT_URL, {
+
+                            method: "POST",
+
+                            redirect: "follow",
+
+                            headers: {
+                                "Content-Type":
+                                    "text/plain;charset=utf-8"
+                            },
+
+                            body: JSON.stringify(data)
+
+                        });
+
+
+                    const result =
+                        await response.json();
+
+
+                    if (result.success) {
+
+                        status.textContent =
+                            "Upload successful!";
+
+                        console.log(result);
+
+                    } else {
+
+                        status.textContent =
+                            "Upload failed: "
+                            + result.error;
+
+                    }
+
+                }
+
+                catch (error) {
+
+                    console.error(error);
+
+                    status.textContent =
+                        "Error uploading image.";
+
+                }
+
+            };
+
+
+            reader.readAsDataURL(file);
+
+        }
+
+    </script>
+
+</body>
+
+</html>
