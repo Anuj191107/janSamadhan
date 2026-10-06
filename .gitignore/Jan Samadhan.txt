@@ -1,5 +1,9 @@
 Jan Samadhan
 
+logins
+1. pa19112007....	pass@123
+2. 
+
 project id: jan-samadhan-a4164
 
 firebase cofig

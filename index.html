@@ -1,17 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
-  <head>
-        <title>Jan Samadhan: Solve Your Problems</title>
-        <link rel="stylesheet" href="style.css">
-  </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jan Samadhan | Civic Issue Reporting</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .welcome {
+            max-width: 700px;
+            margin: 90px auto;
+            padding: 32px 24px;
+            text-align: center;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
 
-  <body>
-        <h1>Civic Issue Reporting System</h1>
+        .welcome p {
+            color: #555;
+            line-height: 1.6;
+        }
 
-        <p>Firebase connection test</p>
+        .primary-button {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            background: #246b45;
+            color: white;
+            font-size: 16px;
+            text-decoration: none;
+            cursor: pointer;
+        }
 
-        <script type="module" src="firebase.js"></script>
-  </body>
+        .primary-button:hover {
+            background: #194d31;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="welcome">
+        <h1>Jan Samadhan</h1>
+        <h2>Civic Issue Reporting System</h2>
+        <p>Report civic problems in your area and help make your community better.</p>
+
+        <a class="primary-button" href="login.html">Login</a>
+        <a class="primary-button" href="register.html">Register</a>
+    </main>
+</body>
 
 </html>
