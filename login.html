@@ -2,12 +2,19 @@
 <html>
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#176b4b">
     <title>Login - Jan Samadhan</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
-
-    <h1>Jan Samadhan</h1>
+<body class="auth-page">
+  <a class="auth-back-link" href="index.html">← Back to home</a>
+  <main class="auth-container">
+    <a class="auth-brand" href="index.html"><span class="brand-mark">JS</span><span><strong>Jan Samadhan</strong><small>A better neighbourhood starts with us.</small></span></a>
+    <h1>Welcome back</h1>
+    <p class="auth-intro">Sign in to report an issue and follow its progress.</p>
 
     <input
         type="email"
@@ -25,8 +32,9 @@
         Login
     </button>
 
-    <p id="message"></p>
-
+    <p id="message" role="status" aria-live="polite"></p>
+    <p class="auth-switch">New to Jan Samadhan? <a href="register.html">Create a citizen account</a></p>
+  </main>
 
     <script
         type="module"

@@ -1,8 +1,5 @@
-import {
-    db
-} from "./firebase.js";
-
-
+import { db } from "./firebase.js";
+import { mountReactionControls } from "./interactions.js";
 import {
     collection,
     getDocs,
@@ -10,398 +7,169 @@ import {
     orderBy
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-
-const complaintsContainer =
-    document.getElementById(
-        "complaintsContainer"
-    );
-
+const complaintsContainer = document.getElementById("complaintsContainer");
+const loadingMessage = document.getElementById("loadingMessage");
+const errorMessage = document.getElementById("errorMessage");
 let allComplaints = [];
 
-const loadingMessage =
-    document.getElementById(
-        "loadingMessage"
-    );
-
-
-const errorMessage =
-    document.getElementById(
-        "errorMessage"
-    );
-
-
-
-async function loadComplaints() {
-
+function getImageCandidates(url) {
+    if (!url || typeof url !== "string") return [];
     try {
-
-        const complaintsQuery =
-            query(
-                collection(db, "complaints"),
-                orderBy(
-                    "createdAt",
-                    "desc"
-                )
-            );
-
-
-        const snapshot =
-            await getDocs(
-                complaintsQuery
-            );
-
-
-        loadingMessage.style.display =
-            "none";
-
-
-        if (snapshot.empty) {
-
-            complaintsContainer.innerHTML =
-                "<p>No complaints found.</p>";
-
-            return;
-        }
-
-
-        snapshot.forEach(
-            (documentSnapshot) => {
-
-                const complaint =
-                    documentSnapshot.data();
-
-                const complaintId =
-                    documentSnapshot.id;
-
-                allComplaints.push({
-                    id: complaintId,
-                    ...complaint
-                });
-
-            }
-        );
-
-
-        renderComplaints(
-            allComplaints
-        );
-
-    }
-
-
-    catch (error) {
-
-        console.error(
-            "Error loading complaints:",
-            error
-        );
-
-
-        loadingMessage.style.display =
-            "none";
-
-
-        errorMessage.textContent =
-            "Unable to load complaints.";
-
-    }
-
-}
-
-/////google drive URL helper to help conert gd url ti img generation///
-
-
-function getDisplayImageURL(url) {
-    if (!url) return "";
-
-    try {
-        const parsedURL = new URL(url);
-
-        if (parsedURL.hostname === "drive.google.com") {
-            let fileId = parsedURL.searchParams.get("id");
-
-            if (!fileId) {
-                const match = parsedURL.pathname.match(
-                    /\/file\/d\/([^/]+)/
-                );
-
-                if (match) {
-                    fileId = match[1];
-                }
-            }
-
-            if (fileId) {
-                return `https://drive.google.com/uc?export=view&id=${fileId}`;
+        const parsed = new URL(url);
+        const host = parsed.hostname.toLowerCase();
+        if (host === "drive.google.com" || host === "www.drive.google.com") {
+            let id = parsed.searchParams.get("id");
+            if (!id) id = parsed.pathname.match(/\/file\/d\/([^/]+)/)?.[1];
+            if (id) {
+                const safeId = encodeURIComponent(id);
+                return [
+                    `https://drive.google.com/thumbnail?id=${safeId}&sz=w1200`,
+                    `https://drive.google.com/uc?export=view&id=${safeId}`,
+                    `https://drive.google.com/uc?export=download&id=${safeId}`
+                ];
             }
         }
-
-        return url;
+        return [url];
     } catch (error) {
         console.error("Invalid image URL:", error);
-        return "";
+        return [];
     }
 }
 
-
-/* =========================================
-   CREATE COMPLAINT CARD
-========================================= */
-
-function createComplaintCard(
-    complaint,
-    complaintId
-) {
-
-    const card =
-        document.createElement("div");
-
-
-    card.className =
-        "complaint-card";
-
-
-    card.innerHTML = `
-
-        
-        <img
-            src="${getDisplayImageURL(complaint.imageURL)}"
-            alt="Complaint image"
-            class="complaint-image"
-            onerror="this.style.display='none'; console.error('Image failed to load:', this.src);"
-        >
-
-
-        <h3>
-            ${complaint.title}
-        </h3>
-
-        <p>
-            <strong>Category:</strong>
-            ${complaint.category}
-        </p>
-
-        <p>
-            <strong>Location:</strong>
-           ${complaint.locationName ||
-        (
-            complaint.latitude != null && complaint.longitude != null
-                ? `${complaint.latitude}, ${complaint.longitude}`
-                : "Location not available"
-        )
+function setPreviewImage(image, originalURL, fallbackMessage) {
+    const candidates = getImageCandidates(originalURL);
+    let attempt = 0;
+    image.addEventListener("error", () => {
+        attempt += 1;
+        if (attempt < candidates.length) {
+            image.src = candidates[attempt];
+        } else {
+            const note = document.createElement("p");
+            note.className = "image-fallback";
+            note.textContent = fallbackMessage;
+            image.replaceWith(note);
         }
-        </p>
-
-        <p>
-            ${complaint.description}
-        </p>
-
-        <p class="status ${getStatusClass(complaint.status)}">
-
-            <strong>Status:</strong>
-            ${complaint.status}
-
-        </p>
-
-        <button
-            class="view-button"
-            data-id="${complaintId}"
-        >
-            View Complaint
-        </button>
-
-    `;
-
-
-    complaintsContainer.appendChild(
-        card
-    );
-
-}
-
-
-/* =========================================
-   STEP 10: RENDER COMPLAINTS
-========================================= */
-
-function renderComplaints(
-    complaints
-) {
-
-    complaintsContainer.innerHTML = "";
-
-
-    if (complaints.length === 0) {
-
-        complaintsContainer.innerHTML =
-            "<p>No complaints found.</p>";
-
-        return;
-
+    });
+    if (candidates.length) image.src = candidates[0];
+    else {
+        const note = document.createElement("p");
+        note.className = "image-fallback";
+        note.textContent = fallbackMessage;
+        image.replaceWith(note);
     }
-
-
-    complaints.forEach(
-        (complaint) => {
-
-            createComplaintCard(
-                complaint,
-                complaint.id
-            );
-
-        }
-    );
-
-
-    addViewButtonListeners();
-
 }
-
-
-/* =========================================
-   VIEW COMPLAINT BUTTON
-========================================= */
-
-function addViewButtonListeners() {
-
-    const viewButtons =
-        document.querySelectorAll(
-            ".view-button"
-        );
-
-
-    viewButtons.forEach(
-        (button) => {
-
-            button.addEventListener(
-                "click",
-                () => {
-
-                    const complaintId =
-                        button.dataset.id;
-
-
-                    window.location.href =
-                        `complaint.html?id=${complaintId}`;
-
-                }
-            );
-
-        }
-    );
-
-}
-
-
-/* =========================================
-   STATUS CLASS
-========================================= */
 
 function getStatusClass(status) {
-
-    switch (status) {
-
-        case "SUBMITTED":
-            return "status-submitted";
-
-        case "UNDER_REVIEW":
-            return "status-review";
-
-        case "IN_PROGRESS":
-            return "status-progress";
-
-        case "RESOLVED":
-            return "status-resolved";
-
-        case "CLOSED":
-            return "status-closed";
-
-        case "REJECTED":
-            return "status-rejected";
-
-        default:
-            return "";
-
-    }
-
+    const normalized = String(status || "").toUpperCase();
+    if (normalized === "SUBMITTED" || normalized === "PENDING") return "status-submitted";
+    if (normalized === "UNDER_REVIEW" || normalized === "IN_REVIEW") return "status-review";
+    if (normalized === "IN_PROGRESS" || normalized === "UNDER_PROGRESS") return "status-progress";
+    if (normalized === "RESOLVED" || normalized === "CLOSED") return "status-resolved";
+    if (normalized === "REJECTED") return "status-rejected";
+    return "";
 }
 
+function makeTextElement(tag, text, className = "") {
+    const element = document.createElement(tag);
+    element.textContent = text ?? "";
+    if (className) element.className = className;
+    return element;
+}
 
-/* =========================================
-   LOAD COMPLAINTS
-========================================= */
+function createComplaintCard(complaint) {
+    const card = document.createElement("article");
+    card.className = "complaint-card";
+
+    const imageURL = complaint.imageURL;
+    if (imageURL) {
+        const image = document.createElement("img");
+        setPreviewImage(image, imageURL, "Image preview unavailable. Open the image URL to check sharing access.");
+        image.alt = `Photo for ${complaint.title || "civic complaint"}`;
+        image.className = "complaint-image";
+        image.loading = "lazy";
+        image.addEventListener("error", () => {
+            image.replaceWith(makeTextElement("p", "Complaint image could not be loaded.", "image-fallback"));
+        }, { once: true });
+        card.appendChild(image);
+    } else {
+        card.appendChild(makeTextElement("p", "No image available for this complaint.", "image-fallback"));
+    }
+
+    card.appendChild(makeTextElement("h3", complaint.title || "Untitled complaint"));
+    const category = document.createElement("p");
+    category.append("Category: ");
+    category.appendChild(makeTextElement("strong", complaint.category || "Not specified"));
+    card.appendChild(category);
+
+    const locationValue = complaint.locationName ||
+        (complaint.latitude != null && complaint.longitude != null
+            ? `${complaint.latitude}, ${complaint.longitude}`
+            : "Location not available");
+    const location = document.createElement("p");
+    location.append("Location: ");
+    location.appendChild(makeTextElement("strong", locationValue));
+    card.appendChild(location);
+
+    card.appendChild(makeTextElement("p", complaint.description || "No description provided."));
+
+    const status = makeTextElement("p", `Status: ${complaint.status || "SUBMITTED"}`,
+        `status ${getStatusClass(complaint.status)}`.trim());
+    card.appendChild(status);
+
+    const actions = document.createElement("div");
+    actions.className = "complaint-actions";
+
+    const viewButton = makeTextElement("button", "View Complaint", "view-button");
+    viewButton.type = "button";
+    viewButton.addEventListener("click", () => {
+        window.location.href = `complaint.html?id=${encodeURIComponent(complaint.id)}`;
+    });
+    actions.appendChild(viewButton);
+
+    const interactionPanel = document.createElement("section");
+    interactionPanel.className = "interaction-panel complaint-card-interactions";
+    mountReactionControls(interactionPanel, complaint.id, { compact: true });
+    actions.appendChild(interactionPanel);
+    card.appendChild(actions);
+    return card;
+}
+
+function renderComplaints(complaints) {
+    complaintsContainer.replaceChildren();
+    if (!complaints.length) {
+        complaintsContainer.appendChild(makeTextElement("p", "No complaints found."));
+        return;
+    }
+    const fragment = document.createDocumentFragment();
+    complaints.forEach((complaint) => fragment.appendChild(createComplaintCard(complaint)));
+    complaintsContainer.appendChild(fragment);
+}
+
+async function loadComplaints() {
+    try {
+        const complaintsQuery = query(collection(db, "complaints"), orderBy("createdAt", "desc"));
+        const snapshot = await getDocs(complaintsQuery);
+        allComplaints = snapshot.docs.map((item) => ({ id: item.id, ...item.data() }));
+        loadingMessage.style.display = "none";
+        renderComplaints(allComplaints);
+    } catch (error) {
+        console.error("Error loading complaints:", error);
+        loadingMessage.style.display = "none";
+        errorMessage.textContent = "Unable to load complaints. Check your connection and Firestore read permissions.";
+    }
+}
+
+document.querySelectorAll("#filters button").forEach((button) => {
+    button.addEventListener("click", () => {
+        const category = button.dataset.category;
+        renderComplaints(category === "all"
+            ? allComplaints
+            : allComplaints.filter((complaint) => complaint.category === category));
+        document.querySelectorAll("#filters button").forEach((item) => {
+            item.classList.toggle("filter-active", item === button);
+            item.setAttribute("aria-pressed", String(item === button));
+        });
+    });
+});
 
 loadComplaints();
-
-const filterButtons =
-    document.querySelectorAll(
-        "#filters button"
-    );
-
-
-filterButtons.forEach(
-    (button) => {
-
-        button.addEventListener(
-            "click",
-            () => {
-
-                const category =
-                    button.dataset.category;
-
-
-                if (category === "all") {
-
-                    renderComplaints(
-                        allComplaints
-                    );
-
-                }
-
-                else {
-
-                    const filtered =
-                        allComplaints.filter(
-                            (complaint) =>
-                                complaint.category ===
-                                category
-                        );
-
-
-                    renderComplaints(
-                        filtered
-                    );
-
-                }
-
-            }
-        );
-
-    }
-);
-
-
-///....................................///
-/// logic for button- "View Complaint"  phase 5 step 12///
-///....................................///
-
-document.addEventListener(
-    "click",
-    (event) => {
-
-        if (
-            event.target.classList.contains(
-                "view-button"
-            )
-        ) {
-
-            const complaintId =
-                event.target.dataset.id;
-
-
-            window.location.href =
-                `complaint.html?id=${complaintId}`;
-
-        }
-
-    }
-);

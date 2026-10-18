@@ -8,6 +8,7 @@ import {
     addDoc,
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import { sendPhase5Event } from "./phase5-backend.js";
 
 
 // ==================================================
@@ -485,6 +486,10 @@ async function submitComplaint(event) {
 
 
         // ------------------------------------------
+        // Create an in-platform notification through the trusted backend when configured.
+        // Notification failure must not undo a successfully submitted complaint.
+        sendPhase5Event("complaintSubmitted", complaintRef.id).catch((e) => console.warn("Phase 5 notification pending backend setup:", e));
+
         // 9. SUCCESS
         // ------------------------------------------
 

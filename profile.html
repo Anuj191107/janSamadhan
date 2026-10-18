@@ -1,110 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>My Profile - Jan Samadhan</title>
-
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile - Jan Samadhan</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
+<body class="app-page profile-page">
+  <header class="app-header">
+    <a class="app-brand" href="citizen.html"><span class="brand-mark">JS</span><strong>Jan Samadhan</strong></a>
+    <nav>
+      <a href="citizen.html">Home</a>
+      <a href="report.html">Report Issue</a>
+      <a href="profile.html" aria-current="page">My Profile</a>
+      <button id="logoutButton" type="button">Logout</button>
+    </nav>
+  </header>
 
-<body>
+  <main class="profile-main">
+    <a href="citizen.html" class="back-link">&larr; Back to Civic Issues</a>
+    <section class="profile-header">
+      <div class="profile-avatar" id="profileAvatar">C</div>
+      <div>
+        <h2 id="profileHeading">My Profile</h2>
+        <p>Your account details and a personal record of the civic issues you have reported.</p>
+      </div>
+    </section>
 
-    <header>
-        <h1>Jan Samadhan</h1>
+    <p id="profileLoading" role="status">Loading your profile...</p>
+    <p id="profileError" role="alert"></p>
+    <p id="profileNotice" role="status"></p>
 
-        <nav>
-            <a href="citizen.html">Home</a>
-            <a href="report.html">Report Issue</a>
-            <a href="profile.html">My Profile</a>
-            <button id="logoutButton">Logout</button>
-        </nav>
-    </header>
+    <section id="profileContent" hidden>
+      <h3>Account Details</h3>
+      <div class="profile-details">
+        <div class="profile-detail"><span>Full Name</span><strong id="profileName">-</strong></div>
+        <div class="profile-detail"><span>Email Address</span><strong id="profileEmail">-</strong></div>
+        <div class="profile-detail"><span>Account Role</span><strong id="profileRole">-</strong></div>
+        <div class="profile-detail"><span>Member Since</span><strong id="profileJoined">-</strong></div>
+      </div>
 
-    <main class="profile-main">
+      <h3>My Complaint Statistics</h3>
+      <div class="profile-stats">
+        <div class="stat-card"><span class="stat-number" id="totalReports">0</span><span>Total Reports</span></div>
+        <div class="stat-card"><span class="stat-number" id="progressReports">0</span><span>Under Progress</span><small>Under review or in progress</small></div>
+        <div class="stat-card"><span class="stat-number" id="resolvedReports">0</span><span>Resolved</span></div>
+      </div>
 
-        <a href="citizen.html" class="back-link">
-            &larr; Back to Civic Issues
-        </a>
+      <div class="my-reports-heading">
+        <div>
+          <h3>My Reports</h3>
+          <p class="muted-copy">Track the latest status of every complaint you submitted.</p>
+        </div>
+        <button id="refreshProfileReports" class="profile-refresh" type="button">Refresh</button>
+      </div>
+      <p id="myReportsLoading" class="muted-copy" hidden>Loading your reports...</p>
+      <div id="myReportsList" class="my-reports-list"></div>
 
-        <section class="profile-header">
-            <div class="profile-avatar" id="profileAvatar">C</div>
-
-            <div>
-                <h2 id="profileHeading">My Profile</h2>
-                <p>Manage your account and track your reports.</p>
-            </div>
-        </section>
-
-        <p id="profileLoading">Loading your profile...</p>
-        <p id="profileError" role="alert"></p>
-
-        <section id="profileContent" hidden>
-
-            <h3>Account Details</h3>
-
-            <div class="profile-details">
-                <div class="profile-detail">
-                    <span>Full Name</span>
-                    <strong id="profileName">-</strong>
-                </div>
-
-                <div class="profile-detail">
-                    <span>Email Address</span>
-                    <strong id="profileEmail">-</strong>
-                </div>
-
-                <div class="profile-detail">
-                    <span>Account Role</span>
-                    <strong id="profileRole">-</strong>
-                </div>
-
-                <div class="profile-detail">
-                    <span>Member Since</span>
-                    <strong id="profileJoined">-</strong>
-                </div>
-            </div>
-
-            <h3>My Complaint Statistics</h3>
-
-            <div class="profile-stats">
-
-                <div class="stat-card">
-                    <span class="stat-number" id="totalReports">0</span>
-                    <span>Total Reports</span>
-                </div>
-
-                <div class="stat-card">
-                    <span class="stat-number" id="progressReports">0</span>
-                    <span>Under Progress</span>
-                </div>
-
-                <div class="stat-card">
-                    <span class="stat-number" id="resolvedReports">0</span>
-                    <span>Resolved</span>
-                </div>
-
-            </div>
-
-            <div class="profile-actions">
-                <a href="report.html" class="profile-button">
-                    + Report a New Issue
-                </a>
-
-                <a href="citizen.html" class="profile-button secondary">
-                    Browse Civic Issues
-                </a>
-            </div>
-
-        </section>
-
-    </main>
-
-    <script type="module" src="js/profile.js"></script>
-    <script type="module" src="js/logout.js"></script>
-
+      <div class="profile-actions">
+        <a href="report.html" class="profile-button">+ Report a New Issue</a>
+        <a href="citizen.html" class="profile-button secondary">Browse Civic Issues</a>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="js/profile.js"></script>
+  <script type="module" src="js/logout.js"></script>
+<script type="module" src="js/phase5-actions.js"></script>
 </body>
-
 </html>

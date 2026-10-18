@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Government Dashboard - Jan Samadhan</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="app-page government-page">
+  <header class="app-header">
+    <a class="app-brand" href="government.html"><span class="brand-mark">JS</span><strong>Jan Samadhan</strong></a>
+    <nav class="dashboard-nav">
+      <a href="government.html" aria-current="page">Dashboard</a>
+      <button id="logoutButton" type="button">Logout</button>
+    </nav>
+  </header>
+
+  <main class="government-main">
+    <section class="government-heading">
+      <div>
+        <p class="eyebrow">OFFICIAL WORKSPACE</p>
+        <h2>Government Dashboard</h2>
+        <p>Review civic reports and keep citizens informed about progress.</p>
+      </div>
+      <button id="refreshComplaints" type="button" class="secondary-action">Refresh reports</button>
+    </section>
+
+    <p id="governmentLoading" role="status">Checking access and loading complaints...</p>
+    <p id="governmentError" class="error-message" role="alert"></p>
+    <p id="governmentNotice" class="success-message" role="status" aria-live="polite"></p>
+
+    <section id="governmentContent" hidden>
+      <section class="government-stats" aria-label="Complaint summary">
+        <article class="government-stat"><span id="countTotal">0</span><p>Total reports</p></article>
+        <article class="government-stat"><span id="countSubmitted">0</span><p>Submitted</p></article>
+        <article class="government-stat"><span id="countProgress">0</span><p>In progress</p></article>
+        <article class="government-stat"><span id="countResolved">0</span><p>Resolved</p></article>
+      </section>
+
+      <section class="government-filters" aria-label="Filter complaints">
+        <label>Search reports
+          <input id="searchComplaints" type="search" placeholder="Search title, description or location">
+        </label>
+        <label>Category
+          <select id="categoryFilter">
+            <option value="all">All categories</option>
+            <option value="Road">Road</option>
+            <option value="Water">Water</option>
+            <option value="Garbage">Garbage</option>
+            <option value="Drainage">Drainage</option>
+            <option value="Street Light">Street Light</option>
+            <option value="Other">Other</option>
+          </select>
+        </label>
+        <label>Status
+          <select id="statusFilter">
+            <option value="all">All statuses</option>
+            <option value="SUBMITTED">Submitted</option>
+            <option value="UNDER_REVIEW">Under review</option>
+            <option value="IN_PROGRESS">In progress</option>
+            <option value="RESOLVED">Resolved</option>
+            <option value="REJECTED">Rejected</option>
+          </select>
+        </label>
+      </section>
+
+      <div class="government-list-heading">
+        <h3>Reported civic issues</h3>
+        <span id="visibleCount">0 reports</span>
+      </div>
+      <div id="governmentComplaints" class="government-complaints"></div>
+    </section>
+  </main>
+
+  <script type="module" src="js/government.js"></script>
+  <script type="module" src="js/logout.js"></script>
+<script type="module" src="js/phase5-actions.js"></script>
+</body>
+</html>

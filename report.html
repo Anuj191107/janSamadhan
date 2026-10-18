@@ -2,12 +2,21 @@
 <html>
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#176b4b">
     <title>Report Issue - Jan Samadhan</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
-
-    <h1>Report Civic Issue</h1>
+<body class="app-page report-page">
+  <header class="app-header"><a class="app-brand" href="citizen.html"><span class="brand-mark">JS</span><strong>Jan Samadhan</strong></a><nav><a href="citizen.html">Civic Issues</a><a href="profile.html">My Profile</a><button id="logoutButton" type="button">Logout</button></nav></header>
+  <main class="form-main">
+    <a class="back-link" href="citizen.html">← Back to Civic Issues</a>
+    <section class="form-panel">
+      <p class="eyebrow">COMMUNITY REPORTING</p>
+      <h1>Report a civic issue</h1>
+      <p class="muted-copy">Describe what needs attention and include helpful photo and location details.</p>
 
     <form id="complaintForm">
 
@@ -93,8 +102,9 @@
     </form>
 
 
-    <p id="message"></p>
-
+    <p id="message" role="status" aria-live="polite"></p>
+    </section>
+  </main>
 
     <script type="module" src="js/report.js">
     </script>

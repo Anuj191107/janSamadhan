@@ -38,8 +38,9 @@ async function registerUser() {
     const password =
         document.getElementById("password").value;
 
-    const role =
-        document.getElementById("role").value;
+    // Public registration can only create citizen accounts.
+    // Government accounts must be provisioned by an administrator in Firestore.
+    const role = "citizen";
 
 
     const message =

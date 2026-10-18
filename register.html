@@ -1,56 +1,28 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>Register - Jan Samadhan</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - Jan Samadhan</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
-
-<body>
-
-    <h1>Create Account</h1>
-
-    <input
-        type="text"
-        id="name"
-        placeholder="Full Name"
-    >
-
-    <input
-        type="email"
-        id="email"
-        placeholder="Email"
-    >
-
-    <input
-        type="password"
-        id="password"
-        placeholder="Password"
-    >
-
-    <select id="role">
-
-        <option value="citizen">
-            Citizen
-        </option>
-
-        <option value="government">
-            Government
-        </option>
-
-    </select>
-
-    <button id="registerButton">
-        Register
-    </button>
-
-    <p id="message"></p>
-
-
-    <script
-        type="module"
-        src="js/auth.js">
-    </script>
-
+<body class="auth-page">
+  <a class="auth-back-link" href="index.html">← Back to home</a>
+  <main class="auth-container">
+    <a class="auth-brand" href="index.html"><span class="brand-mark">JS</span><span><strong>Jan Samadhan</strong><small>A better neighbourhood starts with us.</small></span></a>
+    <h1>Create your account</h1>
+    <p class="auth-intro">Join your community in making shared spaces better.</p>
+    <p>Government accounts are provisioned separately by an administrator.</p>
+    <label for="name">Full name</label>
+    <input type="text" id="name" autocomplete="name" required>
+    <label for="email">Email</label>
+    <input type="email" id="email" autocomplete="email" required>
+    <label for="password">Password</label>
+    <input type="password" id="password" autocomplete="new-password" minlength="6" required>
+    <button id="registerButton" type="button">Register</button>
+    <p id="message" role="status" aria-live="polite"></p>
+    <p class="auth-switch">Already registered? <a href="login.html">Sign in</a></p>
+  </main>
+  <script type="module" src="js/auth.js"></script>
 </body>
-
 </html>
